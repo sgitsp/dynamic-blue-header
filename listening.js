@@ -2,9 +2,9 @@ import bsky from '@atproto/api';
 const { BskyAgent } = bsky;
 import * as dotenv from 'dotenv';
 dotenv.config();
-import Axios from 'axios';
-import { setupCache } from 'axios-cache-interceptor';
-const axios = setupCache(Axios);
+import axios from 'axios';
+//import { setupCache } from 'axios-cache-interceptor';
+//const axios = setupCache(Axios);
 import { keepAlive } from './server.js';
 
 // Agent initialization 
@@ -33,7 +33,7 @@ async function nowPlaying() {
   let trackArtist = latestTrack.artist["#text"];
   let artist = trimString(trackArtist, 17);
   console.log("♫ " + last.data.recenttracks.track[0].name + " by " + last.data.recenttracks.track[0].artist['#text'] + " ♫");
-  console.log("LastFm cached status: " + last.cached);
+  //console.log("LastFm cached status: " + last.cached);
 
   if (typeof attr === 'undefined') {
     //nowPlaying = ("Recently Played");
