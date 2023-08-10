@@ -14,7 +14,7 @@ const agent = new BskyAgent({
 
 // Login
 await agent.login({
-  identifier: process.env.BSKY_USERNAME,
+  identifier: process.env.BSKY_IDENTIFIER,
   password: process.env.BSKY_PASSWORD
 });
 
@@ -122,6 +122,7 @@ async function currentTime() {
   let fullTime = hours + ':' + minutes + ':' + seconds;
 
   console.log("📅 " + fullDate + " – " + fullTime + " UTC+" + timezone);
+  console.log("--------------------\n");
 }
 
 // Starter
