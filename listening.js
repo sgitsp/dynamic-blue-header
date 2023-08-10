@@ -5,7 +5,7 @@ dotenv.config();
 import axios from 'axios';
 //import { setupCache } from 'axios-cache-interceptor';
 //const axios = setupCache(Axios);
-import { keepAlive } from './server.js';
+import { keepAlive } from './server.js'; // for replit uptimerobot
 
 // Agent initialization 
 const agent = new BskyAgent({
@@ -32,7 +32,7 @@ async function nowPlaying() {
   console.log("Get track artist...")
   let trackArtist = latestTrack.artist["#text"];
   let artist = trimString(trackArtist, 17);
-  console.log("♫ " + last.data.recenttracks.track[0].name + " by " + last.data.recenttracks.track[0].artist['#text'] + " ♫");
+  console.log("♫ " + "\"" + last.data.recenttracks.track[0].name + "\"" + " by " + last.data.recenttracks.track[0].artist['#text'] + " ♫");
   //console.log("LastFm cached status: " + last.cached);
 
   if (typeof attr === 'undefined') {
@@ -56,7 +56,7 @@ async function updateProfile(names, desc) {
   // get current profile information
   const { data } = await agent.getProfile({ actor: process.env.BSKY_IDENTIFIER });
 
-  console.log("Update profile begin...")
+  console.log("Update profile begin")
   console.log("Display Name: " + names)
   const record = {
     // Main of this article You can put `\n` here > I □ \nUnicode
@@ -98,8 +98,27 @@ async function updateProfile(names, desc) {
     rkey: "self",
     record,
   });
-  console.log("Update profile finished!")
+  console.log("Update profile finished!");
+  console.log("📅 " + fullDate + " – " + fullTime + " UTC+" + timezone);
 }
+
+// Current dateTime function
+const timezone = 7; // add 7 based on GMT+7 location
+var today = new Date();
+today.setUTCHours(today.getHours() + timezone);
+const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+let day = dayNames[today.getDay()];
+let date = today.getDate();
+let month = monthNames[today.getMonth()];
+let year = today.getFullYear();
+let fullDate = day + ", " + date + " " + month + " " + year;
+
+let hours = ("0" + today.getHours()).slice(-2);
+let minutes = ("0" + today.getMinutes()).slice(-2);
+let seconds = ("0" + today.getSeconds()).slice(-2);
+let fullTime = hours + ':' + minutes + ':' + seconds;
 
 // Starter
 nowPlaying();

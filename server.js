@@ -10,7 +10,7 @@ server.all("/", (req, res) => {
 
 export function keepAlive() {
   server.listen(3000, () => {
-    console.log("Server is ready")
+    console.log("Server is ready!")
     console.log("Starting...")
   })
 }
