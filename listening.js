@@ -99,26 +99,30 @@ async function updateProfile(names, desc) {
     record,
   });
   console.log("Update profile finished!");
-  console.log("📅 " + fullDate + " – " + fullTime + " UTC+" + timezone);
+  currentTime();
 }
 
 // Current dateTime function
-const timezone = 7; // add 7 based on GMT+7 location
-var today = new Date();
-today.setUTCHours(today.getHours() + timezone);
-const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+async function currentTime() {
+  const timezone = 7; // add 7 based on GMT+7 location
+  var today = new Date();
+  today.setUTCHours(today.getHours() + timezone);
+  const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  
+  let day = dayNames[today.getDay()];
+  let date = today.getDate();
+  let month = monthNames[today.getMonth()];
+  let year = today.getFullYear();
+  let fullDate = day + ", " + date + " " + month + " " + year;
+  
+  let hours = ("0" + today.getHours()).slice(-2);
+  let minutes = ("0" + today.getMinutes()).slice(-2);
+  let seconds = ("0" + today.getSeconds()).slice(-2);
+  let fullTime = hours + ':' + minutes + ':' + seconds;
 
-let day = dayNames[today.getDay()];
-let date = today.getDate();
-let month = monthNames[today.getMonth()];
-let year = today.getFullYear();
-let fullDate = day + ", " + date + " " + month + " " + year;
-
-let hours = ("0" + today.getHours()).slice(-2);
-let minutes = ("0" + today.getMinutes()).slice(-2);
-let seconds = ("0" + today.getSeconds()).slice(-2);
-let fullTime = hours + ':' + minutes + ':' + seconds;
+  console.log("📅 " + fullDate + " – " + fullTime + " UTC+" + timezone);
+}
 
 // Starter
 nowPlaying();
