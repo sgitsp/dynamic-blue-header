@@ -37,7 +37,7 @@ async function nowPlaying() {
 
   if (typeof attr === 'undefined') {
     //nowPlaying = ("Recently Played"); ⠟⠵⠛⠊⠞⠎⠏⠗
-    updateProfile("F~ 'em", "♫ ---------------\nRecently Played: " + "\"" + trackTitle + "\"" + " by " + trackArtist + "\n ----------------- ♫\n\nI'm usually that person who has no idea what's going on. Raw version of @gits.bsky.london");
+    updateProfile("F~ 'em", "I'm usually that person who has no idea what's going on. Raw version of @gits.bsky.london\n\n♫ Recently Played: " + "\"" + trackTitle + "\"" + " by " + trackArtist + " ♫");
   } else {
     //nowPlaying = ("I'm currently listening to");
     updateProfile("♫ NowPlaying: " + artist + " ♫", "♫ ---------------\nCurrently listening to " + "\"" + trackTitle + "\"" + " by " + trackArtist + "\n ----------------- ♫\n\nRaw version of @gits.bsky.london");
@@ -76,7 +76,7 @@ async function updateProfile(names, desc) {
       mimeType: "image/jpeg",
       // ref.$link is the image URL
       // data.avatar contains CDN URL, so extract only ref
-      ref: { $link: (data.avatar || "").replace(/^.*\/plain\/|@jpeg$/g, "") },
+      ref: { $link: (data.avatar || "").replace(/^.*\/plain\/did.*\/|@jpeg$/g, "") },
       // size is a number type argument Required but zero is fine if passed
       size: 0
     },
@@ -85,9 +85,9 @@ async function updateProfile(names, desc) {
     // type is the same as icon
     banner: {
       $type: "blob",
-      // ref: { $link: (uploadBanner.data.blob.ref.toString()) },
-      ref: { $link: (data.banner || "").replace(/^.*\/plain\/|@jpeg$/g, "") },
       mimeType: "image/png",
+      // ref: { $link: (uploadBanner.data.blob.ref.toString()) },
+      ref: { $link: (data.banner || "").replace(/^.*\/plain\/did.*\/|@jpeg$/g, "") },
       size: 0
     },
   };
