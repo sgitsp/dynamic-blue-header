@@ -36,8 +36,8 @@ async function nowPlaying() {
   //console.log("LastFm cached status: " + last.cached);
 
   if (typeof attr === 'undefined') {
-    //nowPlaying = ("Recently Played");
-    updateProfile(" ", "♫ ---------------\nRecently Played: " + "\"" + trackTitle + "\"" + " by " + trackArtist + "\n ----------------- ♫\n\nI'm usually that person who has no idea what's going on. Raw version of @gits.bsky.london");
+    //nowPlaying = ("Recently Played"); ⠟⠵⠛⠊⠞⠎⠏⠗
+    updateProfile("F~ 'em", "♫ ---------------\nRecently Played: " + "\"" + trackTitle + "\"" + " by " + trackArtist + "\n ----------------- ♫\n\nI'm usually that person who has no idea what's going on. Raw version of @gits.bsky.london");
   } else {
     //nowPlaying = ("I'm currently listening to");
     updateProfile("♫ NowPlaying: " + artist + " ♫", "♫ ---------------\nCurrently listening to " + "\"" + trackTitle + "\"" + " by " + trackArtist + "\n ----------------- ♫\n\nRaw version of @gits.bsky.london");
@@ -109,13 +109,13 @@ async function currentTime() {
   today.setUTCHours(today.getHours() + timezone);
   const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-  
+
   let day = dayNames[today.getDay()];
   let date = today.getDate();
   let month = monthNames[today.getMonth()];
   let year = today.getFullYear();
   let fullDate = day + ", " + date + " " + month + " " + year;
-  
+
   let hours = ("0" + today.getHours()).slice(-2);
   let minutes = ("0" + today.getMinutes()).slice(-2);
   let seconds = ("0" + today.getSeconds()).slice(-2);
