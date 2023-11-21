@@ -36,11 +36,11 @@ async function nowPlaying() {
   //console.log("LastFm cached status: " + last.cached);
 
   if (typeof attr === 'undefined') {
-    //nowPlaying = ("Recently Played"); ⠟⠵⠛⠊⠞⠎⠏⠗
-    updateProfile("F~ 'em", "I'm usually that person who has no idea what's going on. Raw version of @gits.bsky.london\n\n♫ Recently Played: " + "\"" + trackTitle + "\"" + " by " + trackArtist + " ♫");
+    //nowPlaying = ("Recently Played"); ⠟⠵⠛⠊⠞⠎⠏⠗ F~ 'em \\ ‏😭 ?!  \\‏😭 !  ‏‏lol \\‏😭 ?!  ‏‏and I'm just like 
+    updateProfile("srsly?", "I'm usually that person who has no idea what's going on. Since there's no DM features yet, you can DM me on SimpleX: https://dm.oops.wtf\n\n♫ Recently Played: " + "\"" + trackTitle + "\"" + " by " + trackArtist + " ♫");
   } else {
     //nowPlaying = ("I'm currently listening to");
-    updateProfile("♫ NowPlaying: " + artist + " ♫", "♫ ---------------\nCurrently listening to " + "\"" + trackTitle + "\"" + " by " + trackArtist + "\n ----------------- ♫\n\nRaw version of @gits.bsky.london");
+    updateProfile("♫ NowPlaying: " + artist + " ♫", "Listen to many, sing to a few~\n\n" + "♫ Currently listening to " + "\"" + trackTitle + "\"" + " by " + trackArtist);
   }
 }
 
