@@ -314,8 +314,6 @@ async function drawBanner() {
       });
       console.log("Update profile finished...")
       console.log(`Update on ${day} ${fullDate} at ${fullTime}:${seconds} (UTC+${timezone})`);
-      console.log("---------------")
-      console.log(" ")
     }
   );
 }
@@ -423,6 +421,8 @@ async function uploadBanner() {
       record,
     });
     console.log("Upload banner finished...")
+    console.log("---------------")
+    console.log(" ")
   } catch (e) {
     console.error('Error uploading banner:', e.message);
   }
@@ -435,4 +435,4 @@ keepAlive();
 // Set loop interval every millisec
 setInterval(() => {
   getLatestFollowers();
-}, 60000);
+}, 70000);
