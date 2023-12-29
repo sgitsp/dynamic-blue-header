@@ -126,8 +126,8 @@ async function currentTime() {
 }
 
 // Starter
-nowPlaying();
-keepAlive();
+//nowPlaying();
+//keepAlive();
 
 // Set loop interval every millisec
 setInterval(() => {
