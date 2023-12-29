@@ -195,7 +195,7 @@ const albumWidth = 130, // album img size
   rect = Buffer.from(`<svg><rect x="0" y="0" width="${albumWidth}" height="${albumWidth}" rx="${rAlbum}" ry="${rAlbum}"/></svg>`);
 
 // Current dateTime function
-const timezone = -7; // add 7 based on GMT+7 location
+const timezone = 7; // add 7 based on GMT+7 location
 
 function currentTime() {
   var today = new Date();

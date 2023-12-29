@@ -1,8 +1,8 @@
 {
   "name": "dynamic-blue-header",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "type": "module",
-  "main": "listening.js",
+  "main": "index.js",
   "dependencies": {
     "@atproto/api": "^0.4.4",
     "axios": "^1.2.5",
@@ -14,7 +14,7 @@
     "sharp": "^0.31.3"
   },
   "scripts": {
-    "start": "node listening.js"
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "",
