@@ -310,7 +310,7 @@ async function drawBanner() {
       }, 1500, 282);
       console.log(greeting);
       banner.write('1500x500.png', function() {
-        updateProfile();
+        uploadBanner();
       });
       console.log("Update profile finished...")
       console.log(`Update on ${day} ${fullDate} at ${fullTime}:${seconds} (UTC+${timezone})`);
@@ -325,6 +325,59 @@ async function updateProfile(names, desc) {
   try {
     // get current profile information
     const { data } = await agent.getProfile({ actor: process.env.BSKY_IDENTIFIER });
+    //const base64 = new Blob([ fs.readFileSync('1500x500.png')]);
+    //const uploadBanner = await agent.uploadBlob(
+    //  new Uint8Array(await base64.arrayBuffer()),
+    //  {encoding: "image/png"},
+    //);
+    //console.log("Update profile begin...")
+
+    const record = {
+      // Main of this article You can put `\n` here > I □ \nUnicode
+      displayName: names,
+   
+      // Profile description (to keep current settings)
+      description: desc,
+   
+      // Specify the icon image (to keep the current settings)
+      avatar: {
+        // $type and mimeType are type information
+        $type: "blob",
+        mimeType: "image/jpeg",
+        // ref.$link is the image URL
+        // data.avatar contains CDN URL, so extract only ref
+        ref: { $link: (data.avatar || "").replace(/^.*\/plain\/did.*\/|@jpeg$/g, "") },
+        // size is a number type argument Required but zero is fine if passed
+        size: 0
+      },
+   
+      // Specify the header background image (to keep the current settings)
+      // type is the same as icon
+      banner: {
+       $type: "blob",
+       ref: { $link: (data.banner || "").replace(/^.*\/plain\/did.*\/|@jpeg$/g, "") },
+       //ref: { $link: (uploadBanner.data.blob.ref.toString()) },
+       mimeType: "image/png",
+       size: 0
+      },
+    };
+
+    const response = await agent.com.atproto.repo.putRecord({
+      collection: "app.bsky.actor.profile",
+      repo: data.did,
+      rkey: "self",
+      record,
+    });
+    console.log("Update profile finished...")
+  } catch (e) {
+    console.error('Error updating profile:', e.message);
+  }
+}
+
+async function uploadBanner() {
+  try {
+    // get current profile information
+    const { data } = await agent.getProfile({ actor: process.env.BSKY_IDENTIFIER });
     const base64 = new Blob([ fs.readFileSync('1500x500.png')]);
     const uploadBanner = await agent.uploadBlob(
       new Uint8Array(await base64.arrayBuffer()),
@@ -334,10 +387,10 @@ async function updateProfile(names, desc) {
 
     const record = {
       // Main of this article You can put `\n` here > I □ \nUnicode
-      displayName: names,
+      displayName: data.displayName,
    
       // Profile description (to keep current settings)
-      description: desc,
+      description: data.description,
    
       // Specify the icon image (to keep the current settings)
       avatar: {
@@ -369,9 +422,9 @@ async function updateProfile(names, desc) {
       rkey: "self",
       record,
     });
-    //console.log("Update profile finished...")
+    console.log("Upload banner finished...")
   } catch (e) {
-    console.error('Error updating profile:', e.message);
+    console.error('Error uploading banner:', e.message);
   }
 }
 
