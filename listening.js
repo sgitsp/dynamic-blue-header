@@ -36,11 +36,11 @@ async function nowPlaying() {
   //console.log("LastFm cached status: " + last.cached);
 
   if (typeof attr === 'undefined') {
-    //nowPlaying = ("Recently Played"); ⠟⠵⠛⠊⠞⠎⠏⠗ F~ 'em \\ ‏😭 ?!  \\‏😭 !  ‏‏lol \\‏😭 ?!  ‏‏and I'm just like 
-    updateProfile("srsly?", "I'm usually that person who has no idea what's going on. Since there's no DM features yet, you can DM me on SimpleX: https://dm.oops.wtf\n\n♫ Recently Played: " + "\"" + trackTitle + "\"" + " by " + trackArtist + " ♫");
+    //nowPlaying = ("Recently Played"); ⠟⠵⠛⠊⠞⠎⠏⠗ F~ 'em \\ ‏😭 ?!  \\‏😭 !  ‏‏lol \\‏😭 ?!  ‏‏and I'm just like  //How long can this name get? Pretty long it seems...
+    updateProfile("How long can this name get? Pretty long it seems...", "I'm usually that person who has no idea what's going on. Since there's no DM features yet, you can DM me on SimpleX without an account: https://dm.oops.wtf\n\n♫ Recently Played: " + "\"" + trackTitle + "\"" + " by " + trackArtist + " ♫");
   } else {
     //nowPlaying = ("I'm currently listening to");
-    updateProfile("♫ NowPlaying: " + artist + " ♫", "Listen to many, sing to a few~\n\n" + "♫ Currently listening to " + "\"" + trackTitle + "\"" + " by " + trackArtist);
+    updateProfile("♫ NowPlaying: " + artist + " ♫", "Listen to many, sing to a few~\n\n" + "I'm currently listening to " + "\"" + trackTitle + "\"" + " by " + trackArtist);
   }
 }
 
@@ -132,4 +132,4 @@ keepAlive();
 // Set loop interval every millisec
 setInterval(() => {
   nowPlaying();
-}, 70000);
+}, 60000);
