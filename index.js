@@ -28,14 +28,14 @@ async function getLatestFollowers() {
       limit: 3
     });
     //console.log(data)
-  
+
     let count = 0;
     const downloads = new Promise((resolve, reject) => {
       data.data.followers.forEach((user, index, arr) => {
         downloadImage(user.avatar, `${index}.png`).then(() => {
           count++;
           if (count === arr.length) resolve();
-          console.log('Downloading avatar', `${index}.png...`)
+          console.log('> downloading avatar', `${index}.png`)
         });
       })
     })
@@ -43,7 +43,7 @@ async function getLatestFollowers() {
       downloadAlbumImage();
     })
   } catch (error) {
-    console.error('Error download avatar:', error.message);
+    console.error('Error download avatar: ' + '\x1b[31m%s\x1b[0m', error.message);
   }
 }
 
@@ -55,16 +55,16 @@ async function downloadImage(url, image_path) {
   }).then((response) => {
     new Promise((resolve, reject) => {
       resolve(sharp(response.data)
-      //.grayscale()
-      .resize(96, 96)
-      .composite([{
-        input: circleShape,
-        blend: 'dest-in'
-      }])
-      .toFile(image_path))
+        //.grayscale()
+        .resize(96, 96)
+        .composite([{
+          input: circleShape,
+          blend: 'dest-in'
+        }])
+        .toFile(image_path))
     })
   }).catch((err) => {
-    console.log(err)    
+    console.log(err)
   });
 }
 
@@ -108,7 +108,7 @@ async function nowPlaying() {
         //updateProfile('♫ NowPlaying: ' + artist + ' ♫');
       }
     })
-    .catch (error => console.log(error.response.data))
+    .catch(error => console.log(error.response.data))
   return nowPlaying;
 }
 
@@ -120,8 +120,8 @@ async function getRecentTitle() {
       var latestTrack = response.data.recenttracks.track[0];
       trackTitle = latestTrack.name;
     })
-    .catch (error => console.log(error.response.data))
-  console.log('Get track title ♪');
+    .catch(error => console.log(error.response.data))
+  console.log('♪ get track title');
   return trimString(trackTitle, 17);
 }
 
@@ -133,8 +133,8 @@ async function getRecentArtist() {
       var latestTrack = response.data.recenttracks.track[0];
       trackArtist = latestTrack.artist["#text"];
     })
-    .catch (error => console.log(error.response.data))
-  console.log('Get track artist ♪');
+    .catch(error => console.log(error.response.data))
+  console.log('♪ get track artist');
   return trimString(trackArtist, 17);
 }
 
@@ -159,7 +159,7 @@ async function downloadAlbumImage() {
                   blend: 'dest-in'
                 }])
                 .toFile(`trackCover.png`));
-                console.log(`Downloading track album image..`);
+              console.log(`> downloading album cover`);
             })
         ).then(() => {
           drawBanner();
@@ -179,14 +179,14 @@ async function downloadAlbumImage() {
                   blend: 'dest-in'
                 }])
                 .toFile(`trackCover.png`));
-                console.log(`Downloading track album image..`);
+              console.log(`> downloading album cover`);
             })
         ).then(() => {
           drawBanner();
         })
       }
     })
-    .catch (error => console.log('LastFM error:', error.response.data))
+    .catch(error => console.log('LastFM error:', error.response.data))
 }
 
 // Function to crop album cover
@@ -249,7 +249,7 @@ async function drawBanner() {
   const [day, date, month, year, fullDate, fullTime, seconds] = currentTime();
   const images = ['default.png', 'overlay.png', '0.png', '1.png', '2.png', 'trackCover.png'];
   const promiseArray = [];
-  
+
   const dayFont = await Jimp.loadFont('fonts/Avigea/avigea-white-72.fnt');
   const timeFont = await Jimp.loadFont("fonts/Caviar/CaviarBold-white-32.fnt");
   const monthFont = await Jimp.loadFont("fonts/CaviarDreams_white-32.ttf.fnt");
@@ -257,7 +257,7 @@ async function drawBanner() {
   const trackTitleFont = await Jimp.loadFont("fonts/Gotham/gothamMedium-white-12.fnt");
   const trackArtistFont = await Jimp.loadFont("fonts/Gotham/gothamBook-black-12.fnt");
   // const listeningFont = await Jimp.loadFont(Jimp.FONT_SANS_16_WHITE);
-  
+
   images.forEach((image) => promiseArray.push(Jimp.read(image)));
   promiseArray.push(greeting());
   promiseArray.push(nowPlaying());
@@ -308,11 +308,12 @@ async function drawBanner() {
         alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
         alignmentY: Jimp.VERTICAL_ALIGN_BOTTOM
       }, 1500, 282);
-      console.log(greeting);
+      console.log(nowPlaying + ': ' +'\x1b[32m%s\x1b[0m', trackTitle + ' by ' + trackArtist)
+      console.log('\x1b[32m%s\x1b[0m', greeting);
       banner.write('1500x500.png', function() {
         uploadBanner();
       });
-      console.log("Update profile finished...")
+      console.log("New banner created!")
       console.log(`Update on ${day} ${fullDate} at ${fullTime}:${seconds} (UTC+${timezone})`);
     }
   );
@@ -333,10 +334,10 @@ async function updateProfile(names, desc) {
     const record = {
       // Main of this article You can put `\n` here > I □ \nUnicode
       displayName: names,
-   
+
       // Profile description (to keep current settings)
       description: desc,
-   
+
       // Specify the icon image (to keep the current settings)
       avatar: {
         // $type and mimeType are type information
@@ -348,15 +349,15 @@ async function updateProfile(names, desc) {
         // size is a number type argument Required but zero is fine if passed
         size: 0
       },
-   
+
       // Specify the header background image (to keep the current settings)
       // type is the same as icon
       banner: {
-       $type: "blob",
-       ref: { $link: (data.banner || "").replace(/^.*\/plain\/did.*\/|@jpeg$/g, "") },
-       //ref: { $link: (uploadBanner.data.blob.ref.toString()) },
-       mimeType: "image/png",
-       size: 0
+        $type: "blob",
+        ref: { $link: (data.banner || "").replace(/^.*\/plain\/did.*\/|@jpeg$/g, "") },
+        //ref: { $link: (uploadBanner.data.blob.ref.toString()) },
+        mimeType: "image/png",
+        size: 0
       },
     };
 
@@ -366,9 +367,9 @@ async function updateProfile(names, desc) {
       rkey: "self",
       record,
     });
-    console.log("Update profile finished...")
+    console.log('Name: ' + '\x1b[32m%s\x1b[0m', data.displayName)
   } catch (e) {
-    console.error('Error updating profile:', e.message);
+    console.error('Updating profile err:', e.message);
   }
 }
 
@@ -376,20 +377,19 @@ async function uploadBanner() {
   try {
     // get current profile information
     const { data } = await agent.getProfile({ actor: process.env.BSKY_IDENTIFIER });
-    const base64 = new Blob([ fs.readFileSync('1500x500.png')]);
+    const base64 = new Blob([fs.readFileSync('1500x500.png')]);
     const uploadBanner = await agent.uploadBlob(
       new Uint8Array(await base64.arrayBuffer()),
-      {encoding: "image/png"},
+      { encoding: "image/png" },
     );
-    //console.log("Update profile begin...")
 
     const record = {
       // Main of this article You can put `\n` here > I □ \nUnicode
       displayName: data.displayName,
-   
+
       // Profile description (to keep current settings)
       description: data.description,
-   
+
       // Specify the icon image (to keep the current settings)
       avatar: {
         // $type and mimeType are type information
@@ -401,16 +401,16 @@ async function uploadBanner() {
         // size is a number type argument Required but zero is fine if passed
         size: 0
       },
-   
+
       // Specify the header background image (to keep the current settings)
       // type is the same as icon
       banner: {
-       $type: "blob",
-       // ref: { $link: (uploadBanner.data.blob.ref.toString()) },
-       //ref: { $link: (data.banner || "").replace(/^.*\/plain\/did.*\/|@jpeg$/g, "") },
-       ref: { $link: (uploadBanner.data.blob.ref.toString()) },
-       mimeType: "image/png",
-       size: 0
+        $type: "blob",
+        // ref: { $link: (uploadBanner.data.blob.ref.toString()) },
+        //ref: { $link: (data.banner || "").replace(/^.*\/plain\/did.*\/|@jpeg$/g, "") },
+        ref: { $link: (uploadBanner.data.blob.ref.toString()) },
+        mimeType: "image/png",
+        size: 0
       },
     };
 
@@ -420,11 +420,11 @@ async function uploadBanner() {
       rkey: "self",
       record,
     });
-    console.log("Upload banner finished...")
+    console.log("Upload banner success!")
     console.log("---------------")
     console.log(" ")
   } catch (e) {
-    console.error('Error uploading banner:', e.message);
+    console.error('Uploading banner err:', e.message);
   }
 }
 
