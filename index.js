@@ -101,10 +101,10 @@ async function nowPlaying() {
         nowPlaying = ("Recently Played");
         // updateProfile("Ramadhan is just " + hariMundur + " day(s) away! ☪️");
         //updateProfile(["Nobody Nearby...", "Lebaran is just " + hariMundur + " day(s) away", "🦣 sgitsp@mastodon.social"].random());
-        updateProfile("How long can this name get? Pretty long it seems...", "I'm usually that person who has no idea what's going on. Since there's no DM features yet, you can DM me on SimpleX without an account: https://dm.oops.wtf\n\n♫ Recently Played: " + "\"" + trackTitle + "\"" + " by " + trackArtist + " ♫");
+        //updateProfile("How long can this name get? Pretty long it seems...", "I'm usually that person who has no idea what's going on. Since there's no DM features yet, you can DM me on SimpleX without an account: https://dm.oops.wtf\n\n♫ Recently Played: " + "\"" + trackTitle + "\"" + " by " + trackArtist + " ♫");
       } else {
         nowPlaying = ("I'm currently listening to");
-        updateProfile("♫ NowPlaying: " + artist + " ♫", "Listen to many, sing to a few~\n\n" + "I'm currently listening to " + "\"" + trackTitle + "\"" + " by " + trackArtist);
+        //updateProfile("♫ NowPlaying: " + artist + " ♫", "Listen to many, sing to a few~\n\n" + "I'm currently listening to " + "\"" + trackTitle + "\"" + " by " + trackArtist);
         //updateProfile('♫ NowPlaying: ' + artist + ' ♫');
       }
     })
@@ -195,7 +195,7 @@ const albumWidth = 130, // album img size
   rect = Buffer.from(`<svg><rect x="0" y="0" width="${albumWidth}" height="${albumWidth}" rx="${rAlbum}" ry="${rAlbum}"/></svg>`);
 
 // Current dateTime function
-const timezone = 7; // add 7 based on GMT+7 location
+const timezone = -7; // add 7 based on GMT+7 location
 
 function currentTime() {
   var today = new Date();
@@ -263,9 +263,10 @@ async function drawBanner() {
   promiseArray.push(nowPlaying());
   promiseArray.push(getRecentTitle());
   promiseArray.push(getRecentArtist());
+  promiseArray.push(getNames());
 
   Promise.all(promiseArray).then(
-    ([banner, overlay, ava0, ava1, ava2, trackCover, greeting, nowPlaying, trackTitle, trackArtist]) => {
+    ([banner, overlay, ava0, ava1, ava2, trackCover, greeting, nowPlaying, trackTitle, trackArtist, names]) => {
       banner.composite(overlay, 0, 0);
       banner.composite(ava0, 1032, 157);
       banner.composite(ava1, 1154, 157);
@@ -311,7 +312,7 @@ async function drawBanner() {
       console.log(nowPlaying + ': ' +'\x1b[32m%s\x1b[0m', trackTitle + ' by ' + trackArtist)
       console.log('\x1b[32m%s\x1b[0m', greeting);
       banner.write('1500x500.png', function() {
-        uploadBanner();
+        uploadBanner(names);
       });
       console.log("New banner created!")
       console.log(`Update on ${day} ${fullDate} at ${fullTime}:${seconds} (UTC+${timezone})`);
@@ -373,8 +374,32 @@ async function updateProfile(names, desc) {
   }
 }
 
-async function uploadBanner() {
+async function getNames() {
+  let names = "";
+  let desc = "";
+  await getLastFm()
+  .then(response => {
+    var latestTrack = response.data.recenttracks.track[0];
+    var trackTitle = latestTrack.name;
+    var trackArtist = latestTrack.artist["#text"];
+    // detect if the track has attributes associated with it
+    var attr = latestTrack["@attr"];
+    // if nowplaying attr is undefined
+    if (typeof attr === 'undefined') {
+      names = ("How long can this name get? Pretty long it seems...")
+      //desc = ("I'm usually that person who has no idea what's going on. Since there's no DM features yet, you can DM me on SimpleX without an account: https://dm.oops.wtf\n\n♫ Recently Played: " + "\"" + trackTitle + "\"" + " by " + trackArtist + " ♫")
+    } else {
+      names = ("♫ NowPlaying: " + trackArtist + " ♫");
+      //desc = ("Listen to many, sing to a few~\n\n" + "I'm currently listening to " + "\"" + trackTitle + "\"" + " by " + trackArtist);
+      //updateProfile('♫ NowPlaying: ' + artist + ' ♫');
+    }
+  })
+  return names;
+}
+
+async function uploadBanner(names, desc) {
   try {
+    //const names = getNames();
     // get current profile information
     const { data } = await agent.getProfile({ actor: process.env.BSKY_IDENTIFIER });
     const base64 = new Blob([fs.readFileSync('1500x500.png')]);
@@ -385,7 +410,7 @@ async function uploadBanner() {
 
     const record = {
       // Main of this article You can put `\n` here > I □ \nUnicode
-      displayName: data.displayName,
+      displayName: names,
 
       // Profile description (to keep current settings)
       description: data.description,
@@ -420,6 +445,7 @@ async function uploadBanner() {
       rkey: "self",
       record,
     });
+    console.log('Name: ' + '\x1b[32m%s\x1b[0m', names)
     console.log("Upload banner success!")
     console.log("---------------")
     console.log(" ")
