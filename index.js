@@ -3,7 +3,7 @@ const { BskyAgent } = bsky;
 import * as dotenv from 'dotenv';
 dotenv.config();
 import { Blob } from 'buffer';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import fs from 'fs';
 import Jimp from 'jimp';
 import sharp from 'sharp';
@@ -43,29 +43,32 @@ async function getLatestFollowers() {
       downloadAlbumImage();
     })
   } catch (error) {
-    console.error('Error download avatar: ' + '\x1b[31m%s\x1b[0m', error.message);
+    console.error('Get recent followers error: ' + '\x1b[31m%s\x1b[0m', error.message);
   }
 }
 
 // Function to resize downloaded avatar
 async function downloadImage(url, image_path) {
-  await axios({
-    url,
-    responseType: 'arraybuffer',
-  }).then((response) => {
-    new Promise((resolve, reject) => {
-      resolve(sharp(response.data)
-        //.grayscale()
-        .resize(96, 96)
-        .composite([{
-          input: circleShape,
-          blend: 'dest-in'
-        }])
-        .toFile(image_path))
+  try {
+    if (url == null) url = 'https://raw.githubusercontent.com/bluesky-social/social-app/main/assets/default-avatar.png';
+    const response = await axios({
+      url,
+      responseType: 'arraybuffer',
+    }).then((response) => {
+      new Promise((resolve, reject) => {
+        resolve(sharp(response.data)
+          //.grayscale()
+          .resize(96, 96)
+          .composite([{
+            input: circleShape,
+            blend: 'dest-in'
+          }])
+          .toFile(image_path))
+      })
     })
-  }).catch((err) => {
-    console.log(err)
-  });
+  } catch (error) {
+    console.error('Error downloading avatar: ' + '\x1b[31m%s\x1b[0m', error.message);
+  }
 }
 
 // Function to crop image
@@ -146,7 +149,8 @@ async function downloadAlbumImage() {
       const trackCover = latestTrack.image[2]["#text"];
       if (latestTrack.image[2]["#text"] === '') {
         axios({
-          url: 'https://lastfm.freetls.fastly.net/i/u/300x300/c6f59c1e5e7240a4c0d427abd71f3dbb.jpg',
+          //url: 'https://lastfm.freetls.fastly.net/i/u/300x300/c6f59c1e5e7240a4c0d427abd71f3dbb.jpg',
+          url: 'https://www.vinylelite.co.uk/wp-content/uploads/2018/08/default-release-cd.png',
           responseType: 'arraybuffer',
         }).then(
           (response) =>
@@ -195,7 +199,7 @@ const albumWidth = 130, // album img size
   rect = Buffer.from(`<svg><rect x="0" y="0" width="${albumWidth}" height="${albumWidth}" rx="${rAlbum}" ry="${rAlbum}"/></svg>`);
 
 // Current dateTime function
-const timezone = -7; // add 7 based on GMT+7 location
+const timezone = 7; // add 7 based on GMT+7 location
 
 function currentTime() {
   var today = new Date();
@@ -309,7 +313,7 @@ async function drawBanner() {
         alignmentX: Jimp.HORIZONTAL_ALIGN_CENTER,
         alignmentY: Jimp.VERTICAL_ALIGN_BOTTOM
       }, 1500, 282);
-      console.log(nowPlaying + ': ' +'\x1b[32m%s\x1b[0m', trackTitle + ' by ' + trackArtist)
+      console.log(nowPlaying + ': ' + '\x1b[32m%s\x1b[0m', trackTitle + ' by ' + trackArtist)
       console.log('\x1b[32m%s\x1b[0m', greeting);
       banner.write('1500x500.png', function() {
         uploadBanner(names);
@@ -378,22 +382,22 @@ async function getNames() {
   let names = "";
   let desc = "";
   await getLastFm()
-  .then(response => {
-    var latestTrack = response.data.recenttracks.track[0];
-    var trackTitle = latestTrack.name;
-    var trackArtist = latestTrack.artist["#text"];
-    // detect if the track has attributes associated with it
-    var attr = latestTrack["@attr"];
-    // if nowplaying attr is undefined
-    if (typeof attr === 'undefined') {
-      names = ("How long can this name get? Pretty long it seems...")
-      //desc = ("I'm usually that person who has no idea what's going on. Since there's no DM features yet, you can DM me on SimpleX without an account: https://dm.oops.wtf\n\n♫ Recently Played: " + "\"" + trackTitle + "\"" + " by " + trackArtist + " ♫")
-    } else {
-      names = ("♫ NowPlaying: " + trackArtist + " ♫");
-      //desc = ("Listen to many, sing to a few~\n\n" + "I'm currently listening to " + "\"" + trackTitle + "\"" + " by " + trackArtist);
-      //updateProfile('♫ NowPlaying: ' + artist + ' ♫');
-    }
-  })
+    .then(response => {
+      var latestTrack = response.data.recenttracks.track[0];
+      var trackTitle = latestTrack.name;
+      var trackArtist = latestTrack.artist["#text"];
+      // detect if the track has attributes associated with it
+      var attr = latestTrack["@attr"];
+      // if nowplaying attr is undefined
+      if (typeof attr === 'undefined') {
+        names = ("How long can this name get? Pretty long it seems...")
+        //desc = ("I'm usually that person who has no idea what's going on. Since there's no DM features yet, you can DM me on SimpleX without an account: https://dm.oops.wtf\n\n♫ Recently Played: " + "\"" + trackTitle + "\"" + " by " + trackArtist + " ♫")
+      } else {
+        names = ("♫ NowPlaying: " + trackArtist + " ♫");
+        //desc = ("Listen to many, sing to a few~\n\n" + "I'm currently listening to " + "\"" + trackTitle + "\"" + " by " + trackArtist);
+        //updateProfile('♫ NowPlaying: ' + artist + ' ♫');
+      }
+    })
   return names;
 }
 
