@@ -50,7 +50,7 @@ async function getLatestFollowers() {
 // Function to resize downloaded avatar
 async function downloadImage(url, image_path) {
   try {
-    if (url == null) url = 'https://raw.githubusercontent.com/bluesky-social/social-app/main/assets/default-avatar.png';
+    if (url == null) url = 'https://media.idownloadblog.com/wp-content/uploads/2017/03/Twitter-new-2017-avatar-001.png';
     const response = await axios({
       url,
       responseType: 'arraybuffer',
