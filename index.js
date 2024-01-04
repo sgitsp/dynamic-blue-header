@@ -57,7 +57,7 @@ async function downloadImage(url, image_path) {
     }).then((response) => {
       new Promise((resolve, reject) => {
         resolve(sharp(response.data)
-          //.grayscale()
+          .grayscale()
           .resize(96, 96)
           .composite([{
             input: circleShape,
@@ -156,7 +156,7 @@ async function downloadAlbumImage() {
           (response) =>
             new Promise((resolve, reject) => {
               resolve(sharp(response.data)
-                //.grayscale()
+                .grayscale()
                 .resize(albumWidth, albumWidth)
                 .composite([{
                   input: rect,
@@ -176,7 +176,7 @@ async function downloadAlbumImage() {
           (response) =>
             new Promise((resolve, reject) => {
               resolve(sharp(response.data)
-                //.grayscale()
+                .grayscale()
                 .resize(albumWidth, albumWidth)
                 .composite([{
                   input: rect,
@@ -390,7 +390,8 @@ async function getNames() {
       var attr = latestTrack["@attr"];
       // if nowplaying attr is undefined
       if (typeof attr === 'undefined') {
-        names = ("How long can this name get? Pretty long it seems...")
+        //names = ("How long can this name get? Pretty long it seems...")
+        names = ("Edgyning dhiri ana ing lathi")
         //desc = ("I'm usually that person who has no idea what's going on. Since there's no DM features yet, you can DM me on SimpleX without an account: https://dm.oops.wtf\n\n♫ Recently Played: " + "\"" + trackTitle + "\"" + " by " + trackArtist + " ♫")
       } else {
         names = ("♫ NowPlaying: " + trackArtist + " ♫");
